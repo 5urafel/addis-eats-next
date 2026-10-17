@@ -28,7 +28,11 @@ import {
   UserCheck,
 } from "lucide-react";
 
-export default function AuthCard({ safeNext = "/", staffError = false, currentSession = null }) {
+export default function AuthCard({
+  safeNext = "/",
+  staffError = false,
+  currentSession = null,
+}) {
   const [mode, setMode] = useState("signin"); // "signin" | "signup"
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -49,8 +53,14 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
   const [cardAlert, setCardAlert] = useState(null);
 
   // Server action states
-  const [signInState, signInFormAction, isSignInPending] = useActionState(signInAction, null);
-  const [signUpState, signUpFormAction, isSignUpPending] = useActionState(signUpAction, null);
+  const [signInState, signInFormAction, isSignInPending] = useActionState(
+    signInAction,
+    null,
+  );
+  const [signUpState, signUpFormAction, isSignUpPending] = useActionState(
+    signUpAction,
+    null,
+  );
 
   const activeState = mode === "signin" ? signInState : signUpState;
   const isPending = mode === "signin" ? isSignInPending : isSignUpPending;
@@ -116,7 +126,8 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
       const userInStorage = findStoredUserByEmail(normalizedEmail);
       if (!userInStorage) {
         e.preventDefault();
-        const msg = "No account found with this email in local storage. Please create an account first.";
+        const msg =
+          "No account found with this email in local storage. Please create an account first.";
         setClientErrors({
           email: "User does not exist in local storage",
         });
@@ -132,7 +143,8 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
       // Step 2: Credentials (password) must be checked against localStorage
       if (userInStorage.password !== password) {
         e.preventDefault();
-        const msg = "Incorrect password. Please verify your credentials and try again.";
+        const msg =
+          "Incorrect password. Please verify your credentials and try again.";
         setClientErrors({
           password: "Incorrect password for this account",
         });
@@ -175,7 +187,8 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
       const existingUser = findStoredUserByEmail(normalizedEmail);
       if (existingUser) {
         e.preventDefault();
-        const msg = "An account with this email already exists in local storage. Please sign in instead.";
+        const msg =
+          "An account with this email already exists in local storage. Please sign in instead.";
         setClientErrors({
           email: "Email already registered in local storage",
         });
@@ -212,7 +225,8 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
   // Helper to resolve field errors
   const getFieldError = (fieldName) => {
     if (clientErrors[fieldName]) return clientErrors[fieldName];
-    if (activeState?.fieldErrors?.[fieldName]?.[0]) return activeState.fieldErrors[fieldName][0];
+    if (activeState?.fieldErrors?.[fieldName]?.[0])
+      return activeState.fieldErrors[fieldName][0];
     return null;
   };
 
@@ -257,7 +271,8 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
             <ChefHat className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold block">Staff Access Required</span>
-              The Kitchen Dashboard requires a staff account. Sign in using your staff credentials or demo below.
+              The Kitchen Dashboard requires a staff account. Sign in using your
+              staff credentials or demo below.
             </div>
           </div>
         )}
@@ -368,14 +383,21 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
           className="space-y-4"
         >
           <input type="hidden" name="next" value={safeNext} />
-          <input type="hidden" name="role" value={isStaffRole ? "staff" : "customer"} />
+          <input
+            type="hidden"
+            name="role"
+            value={isStaffRole ? "staff" : "customer"}
+          />
           <input type="hidden" name="clientUser" value={clientUserPayload} />
           <input type="hidden" name="userId" value={newUserId} />
 
           {/* Full Name (Sign Up only) */}
           {mode === "signup" && (
             <div>
-              <label htmlFor="name" className="block text-xs font-bold text-stone-700 mb-1.5">
+              <label
+                htmlFor="name"
+                className="block text-xs font-bold text-stone-700 mb-1.5"
+              >
                 Full Name <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
@@ -387,11 +409,14 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
-                    if (clientErrors.name) setClientErrors((prev) => ({ ...prev, name: null }));
+                    if (clientErrors.name)
+                      setClientErrors((prev) => ({ ...prev, name: null }));
                   }}
                   placeholder="e.g. Abebe Bikila"
                   className={`w-full pl-10 pr-4 py-3 bg-stone-50/50 border rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:ring-2 focus:ring-[#E05328] focus:border-transparent transition-all ${
-                    getFieldError("name") ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30" : "border-stone-300"
+                    getFieldError("name")
+                      ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30"
+                      : "border-stone-300"
                   }`}
                 />
               </div>
@@ -406,7 +431,10 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
 
           {/* Email Address */}
           <div>
-            <label htmlFor="email" className="block text-xs font-bold text-stone-700 mb-1.5">
+            <label
+              htmlFor="email"
+              className="block text-xs font-bold text-stone-700 mb-1.5"
+            >
               Email Address <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
@@ -418,12 +446,15 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  if (clientErrors.email) setClientErrors((prev) => ({ ...prev, email: null }));
+                  if (clientErrors.email)
+                    setClientErrors((prev) => ({ ...prev, email: null }));
                   if (cardAlert) setCardAlert(null);
                 }}
                 placeholder="name@example.com"
                 className={`w-full pl-10 pr-4 py-3 bg-stone-50/50 border rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:ring-2 focus:ring-[#E05328] focus:border-transparent transition-all ${
-                  getFieldError("email") ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30" : "border-stone-300"
+                  getFieldError("email")
+                    ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30"
+                    : "border-stone-300"
                 }`}
               />
             </div>
@@ -438,13 +469,20 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
           {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label htmlFor="password" className="block text-xs font-bold text-stone-700">
+              <label
+                htmlFor="password"
+                className="block text-xs font-bold text-stone-700"
+              >
                 Password <span className="text-rose-500">*</span>
               </label>
               {mode === "signin" && (
                 <button
                   type="button"
-                  onClick={() => alert("Demo credentials default to 'password123'. New accounts use the password entered during registration in localStorage.")}
+                  onClick={() =>
+                    alert(
+                      "Demo credentials default to 'password123'. New accounts use the password entered during registration in localStorage.",
+                    )
+                  }
                   className="text-[11px] text-[#E05328] hover:underline font-semibold cursor-pointer"
                 >
                   Forgot password?
@@ -460,12 +498,15 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  if (clientErrors.password) setClientErrors((prev) => ({ ...prev, password: null }));
+                  if (clientErrors.password)
+                    setClientErrors((prev) => ({ ...prev, password: null }));
                   if (cardAlert) setCardAlert(null);
                 }}
                 placeholder="••••••••"
                 className={`w-full pl-10 pr-10 py-3 bg-stone-50/50 border rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:ring-2 focus:ring-[#E05328] focus:border-transparent transition-all ${
-                  getFieldError("password") ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30" : "border-stone-300"
+                  getFieldError("password")
+                    ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30"
+                    : "border-stone-300"
                 }`}
               />
               <button
@@ -475,7 +516,11 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
                 title={showPassword ? "Hide password" : "Show password"}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
             {getFieldError("password") && (
@@ -489,7 +534,10 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
           {/* Confirm Password (Sign Up only) */}
           {mode === "signup" && (
             <div>
-              <label htmlFor="confirmPassword" className="block text-xs font-bold text-stone-700 mb-1.5">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-xs font-bold text-stone-700 mb-1.5"
+              >
                 Confirm Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
@@ -501,21 +549,35 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
                   value={confirmPassword}
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
-                    if (clientErrors.confirmPassword) setClientErrors((prev) => ({ ...prev, confirmPassword: null }));
+                    if (clientErrors.confirmPassword)
+                      setClientErrors((prev) => ({
+                        ...prev,
+                        confirmPassword: null,
+                      }));
                   }}
                   placeholder="••••••••"
                   className={`w-full pl-10 pr-10 py-3 bg-stone-50/50 border rounded-xl text-xs sm:text-sm text-stone-900 focus:bg-white focus:ring-2 focus:ring-[#E05328] focus:border-transparent transition-all ${
-                    getFieldError("confirmPassword") ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30" : "border-stone-300"
+                    getFieldError("confirmPassword")
+                      ? "border-rose-400 ring-2 ring-rose-400/20 bg-rose-50/30"
+                      : "border-stone-300"
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-1 cursor-pointer"
-                  title={showConfirmPassword ? "Hide password" : "Show password"}
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  title={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {getFieldError("confirmPassword") && (
@@ -538,7 +600,9 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
               />
               <span className="flex items-center gap-1">
                 <span>Kitchen Staff Account</span>
-                <span className="text-[10px] text-stone-400">(for order preparation)</span>
+                <span className="text-[10px] text-stone-400">
+                  (for order preparation)
+                </span>
               </span>
             </label>
           </div>
@@ -552,17 +616,21 @@ export default function AuthCard({ safeNext = "/", staffError = false, currentSe
             {isPending ? (
               <>
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>{mode === "signin" ? "Verifying Credentials..." : "Creating Account..."}</span>
+                <span>
+                  {mode === "signin"
+                    ? "Verifying Credentials..."
+                    : "Creating Account..."}
+                </span>
               </>
             ) : mode === "signin" ? (
               <>
                 <KeyRound className="w-4 h-4" />
-                <span>Verify &amp; Sign In</span>
+                <span> Sign In</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             ) : (
               <>
-                <span>Register in LocalStorage &amp; Sign In</span>
+                <span> Sign In</span>
                 <Sparkles className="w-4 h-4" />
               </>
             )}
